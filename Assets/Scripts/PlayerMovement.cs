@@ -46,6 +46,13 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private float m_delayToIdle = 0.0f;
 
+    RhythmBase rhythmBase;
+
+    private void Awake()
+    {
+        rhythmBase = GameObject.Find("LevelMusic").GetComponent<RhythmBase>();
+    }
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -106,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
             animator.SetTrigger("Jump");
+
+
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
             coyoteTimeCounter = 0f;
@@ -228,6 +237,15 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator Dash()
     {
+        if (rhythmBase.isOnBeat)
+        {
+            dashingPower = 36f;
+            Debug.Log("Player is on beat.");
+        }
+        else
+        {
+            dashingPower = 24f;
+        }
         canDash = false;
         isDashing = true;
         animator.SetTrigger("Roll");

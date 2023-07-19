@@ -22,16 +22,25 @@ public class MeleeBaseState : State
     // The Hit Effect to Spawn on the afflicted Enemy
     private GameObject HitEffectPrefab;
 
+    RhythmBase rhythmBase;
+
     // Input buffer Timer
     private float AttackPressedTimer = 0;
 
+    
+    
+
+ 
+
     public override void OnEnter(StateMachine _stateMachine)
     {
+        rhythmBase = GameObject.Find("LevelMusic").GetComponent<RhythmBase>();
         base.OnEnter(_stateMachine);
         animator = GetComponent<Animator>();
         collidersDamaged = new List<Collider2D>();
         hitCollider = GetComponent<ComboCharacter>().hitbox;
         HitEffectPrefab = GetComponent<ComboCharacter>().Hiteffect;
+        
     }
 
     public override void OnUpdate()
@@ -47,7 +56,7 @@ public class MeleeBaseState : State
 
         if (Input.GetMouseButtonDown(0))
         {
-            AttackPressedTimer = 2;
+            AttackPressedTimer = 1;
         }
 
         if (animator.GetFloat("AttackWindow.Open") > 0f && AttackPressedTimer > 0)
@@ -67,6 +76,8 @@ public class MeleeBaseState : State
         ContactFilter2D filter = new ContactFilter2D();
         filter.useTriggers = true;
         int colliderCount = Physics2D.OverlapCollider(hitCollider, filter, collidersToDamage);
+
+
         for (int i = 0; i < colliderCount; i++)
         {
 
@@ -75,7 +86,13 @@ public class MeleeBaseState : State
                 TeamComponent hitTeamComponent = collidersToDamage[i].GetComponentInChildren<TeamComponent>();
 
                 // Only check colliders with a valid Team Componnent attached
-                if (hitTeamComponent && hitTeamComponent.teamIndex == TeamIndex.Enemy)
+                if (hitTeamComponent && hitTeamComponent.teamIndex == TeamIndex.Enemy && rhythmBase.isOnBeat)
+                {
+                    GameObject.Instantiate(HitEffectPrefab, collidersToDamage[i].transform);
+                    Debug.Log("Player is on beat! Enemy Has Taken:" + (attackIndex + 1) + "Damage");
+                    collidersDamaged.Add(collidersToDamage[i]);
+                }
+                else
                 {
                     GameObject.Instantiate(HitEffectPrefab, collidersToDamage[i].transform);
                     Debug.Log("Enemy Has Taken:" + attackIndex + "Damage");
