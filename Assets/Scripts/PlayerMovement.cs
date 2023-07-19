@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Animator m_animator;
+    private Rigidbody2D body2d;
     private float horizontal;
     private float speed = 8f;
     private float jumpingPower = 16f;
@@ -37,8 +39,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TrailRenderer tr;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
+   
 
     private bool doubleJump;
+
+    private Animator animator;
+    private float m_delayToIdle = 0.0f;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        body2d = GetComponent<Rigidbody2D>();
+    }
 
     void Update()
     {
@@ -51,8 +63,11 @@ public class PlayerMovement : MonoBehaviour
 
         horizontal = Input.GetAxisRaw("Horizontal");
 
+
+
         if (IsGrounded())
         {
+            animator.SetBool("Grounded", IsGrounded());
             coyoteTimeCounter = coyoteTime;
         }
         else
@@ -62,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
+            animator.SetTrigger("Jump");
             jumpBufferCounter = jumpBufferTime;
         }
         else
@@ -78,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (IsGrounded() || doubleJump)
             {
+                animator.SetBool("Grounded", IsGrounded());
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
 
                 doubleJump = !doubleJump;
@@ -88,10 +105,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
+            animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
             coyoteTimeCounter = 0f;
         }
+
+        animator.SetFloat("AirSpeedY", body2d.velocity.y);
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
@@ -105,7 +125,18 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip();
         }
-
+        
+        if (horizontal == 1 || horizontal == -1)
+        {
+            m_delayToIdle = 0.05f;
+            animator.SetInteger("AnimState", 1);
+        }
+        else
+        {
+            m_delayToIdle -= Time.deltaTime;
+            if (m_delayToIdle < 0)
+                animator.SetInteger("AnimState", 0);
+        }
         
     }
 
@@ -135,11 +166,13 @@ public class PlayerMovement : MonoBehaviour
         if (IsWalled() && !IsGrounded() && horizontal != 0f)
         {
             isWallSliding = true;
+            animator.SetBool("WallSlide", isWallSliding);
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
         }
         else
         {
             isWallSliding = false;
+            animator.SetBool("WallSlide", isWallSliding);
         }
     }
 
@@ -185,6 +218,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
+            
             isFacingRight = !isFacingRight;
             Vector3 localScale = transform.localScale;
             localScale.x *= -1f;
@@ -196,6 +230,7 @@ public class PlayerMovement : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        animator.SetTrigger("Roll");
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
@@ -207,4 +242,5 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
+
 }
