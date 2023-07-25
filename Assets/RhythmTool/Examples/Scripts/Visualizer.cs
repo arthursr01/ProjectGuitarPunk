@@ -16,9 +16,14 @@ namespace RhythmTool.Examples
 
         private List<Line> lines;
 
+        
+
         private List<Chroma> chromaFeatures;
 
         private Note lastNote = Note.FSHARP;
+
+        private float cameraPositionX;
+        private float cameraPositionY;
 
         void Awake()
         {           
@@ -32,14 +37,19 @@ namespace RhythmTool.Examples
             lines = new List<Line>();
 
             chromaFeatures = new List<Chroma>();
+             
         }
         
         void Update()
         {
+            cameraPositionX = Camera.main.transform.position.x;
+            cameraPositionY = Camera.main.transform.position.y;
             if (!player.isPlaying)
                 return;
 
             UpdateLines();
+
+
         }
         
         private void UpdateLines()
@@ -66,7 +76,8 @@ namespace RhythmTool.Examples
             {
                 Vector3 position = line.transform.position;
 
-                position.x = line.timestamp - time;
+                position.x = line.timestamp - time + cameraPositionX - 8;
+                position.y = cameraPositionY + 4;
 
                 line.transform.position = position;
             }
@@ -126,9 +137,10 @@ namespace RhythmTool.Examples
         private void CreateLine(float timestamp, float position, float scale, Color color, float opacity)
         {
             Line line = Instantiate(linePrefab);
-            line.transform.position = new Vector3(0, position, 0);
-            line.transform.localScale = new Vector3(.1f, scale, .01f);
-
+            
+            line.transform.position = new Vector2(0, position);
+            line.transform.localScale = new Vector2(.1f, scale);
+            
             line.Init(color, opacity, timestamp);
 
             lines.Add(line);
