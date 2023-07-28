@@ -56,7 +56,7 @@ public class MeleeBaseState : State
 
         if (Input.GetMouseButtonDown(0))
         {
-            AttackPressedTimer = 1;
+            AttackPressedTimer = 2;
         }
 
         if (animator.GetFloat("AttackWindow.Open") > 0f && AttackPressedTimer > 0)
@@ -92,7 +92,7 @@ public class MeleeBaseState : State
                     Debug.Log("Player is on beat! Enemy Has Taken:" + (attackIndex + 1) + "Damage");
                     collidersDamaged.Add(collidersToDamage[i]);
                 }
-                else
+                else if (hitTeamComponent && hitTeamComponent.teamIndex == TeamIndex.Enemy && !rhythmBase.isOnBeat)
                 {
                     GameObject.Instantiate(HitEffectPrefab, collidersToDamage[i].transform);
                     Debug.Log("Enemy Has Taken:" + attackIndex + "Damage");
