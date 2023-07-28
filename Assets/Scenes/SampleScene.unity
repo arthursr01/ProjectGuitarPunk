@@ -935,7 +935,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.059289277, y: 0.062298954}
@@ -1738,10 +1738,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1778142810}
-  - component: {fileID: 1778142811}
   - component: {fileID: 1778142813}
   - component: {fileID: 1778142812}
   - component: {fileID: 1778142814}
+  - component: {fileID: 1778142815}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1766,19 +1766,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1778142811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778142807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 742bf564222c682469723d01185c9f9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _teamIndex: 2
 --- !u!95 &1778142812
 Animator:
   serializedVersion: 5
@@ -1826,7 +1813,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &1778142814
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1879,6 +1866,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1778142815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778142807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 742bf564222c682469723d01185c9f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _teamIndex: 2
 --- !u!1 &1852127202
 GameObject:
   m_ObjectHideFlags: 0
