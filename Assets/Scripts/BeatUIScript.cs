@@ -21,7 +21,7 @@ public class BeatUIScript : MonoBehaviour
 
     private List<Chroma> chromaFeatures;
 
-    private Note lastNote = Note.FSHARP;
+    //private Note lastNote = Note.FSHARP;
 
     private float cameraPositionX;
     private float cameraPositionY;
